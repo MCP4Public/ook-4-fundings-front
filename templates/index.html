@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Look 4 Fundings - Grant Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="border-b border-gray-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">L4F</span>
+                        </div>
+                        <h1 class="text-xl font-semibold text-gray-900">Look 4 Fundings</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/profile" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="mb-12">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Funding Opportunities</h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Discover and manage funding opportunities tailored to your company's needs and goals.</p>
+            </div>
+            
+            <!-- Filter Section -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm font-medium text-gray-700">Sort by:</span>
+                    <button onclick="sortGrants('affinity')" id="sort-affinity" class="filter-button px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200">
+                        <i class="fas fa-target mr-2"></i>Affinity
+                    </button>
+                    <button onclick="sortGrants('deadline')" id="sort-deadline" class="filter-button px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200">
+                        <i class="fas fa-calendar-alt mr-2"></i>Deadline
+                    </button>
+                    <button onclick="sortGrants('title')" id="sort-title" class="filter-button px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200">
+                        <i class="fas fa-sort-alpha-down mr-2"></i>Title
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm font-medium text-gray-700">Order:</span>
+                    <button onclick="toggleSortOrder()" id="sort-order" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200">
+                        <i class="fas fa-sort-amount-down mr-2"></i>Descending
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grants Grid with Add Card -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Add Grant Card -->
+            <div class="add-grant-card bg-white border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 transition-all duration-300 cursor-pointer group" onclick="openAddGrantModal()">
+                <div class="p-8 text-center h-full flex flex-col justify-center items-center min-h-[300px]">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors duration-200">
+                        <i class="fas fa-plus text-2xl text-gray-600 group-hover:text-gray-800"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Add New Grant</h3>
+                    <p class="text-gray-600 text-sm">Click to add a new funding opportunity to your collection</p>
+                </div>
+            </div>
+            
+            <!-- Grants Container -->
+            <div id="grants-container" class="contents">
+                <!-- Grants will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center py-16 hidden">
+            <div class="max-w-md mx-auto">
+                <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-search text-3xl text-gray-400"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-2">No grants found</h3>
+                <p class="text-gray-600 mb-8">Add your first funding opportunity to get started</p>
+                <button onclick="openAddGrantModal()" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                    <i class="fas fa-plus mr-2"></i>Add Your First Grant
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Grant Modal -->
+    <div id="add-grant-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                <div class="px-8 py-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-gray-900">Add New Grant</h3>
+                        <button onclick="closeAddGrantModal()" class="text-gray-400 hover:text-gray-600 transition duration-200">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <form id="add-grant-form" class="p-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Grant Title</label>
+                            <input type="text" id="grant-title" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Enter grant title">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Application URL</label>
+                            <input type="url" id="grant-url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="https://example.com/grant">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Summary</label>
+                            <textarea id="grant-summary" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Describe the funding opportunity..."></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Deadline</label>
+                                <input type="date" id="grant-deadline" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select id="grant-status" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200">
+                                    <option value="Open">Open</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Upcoming">Upcoming</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Range</label>
+                            <input type="text" id="grant-budget" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="e.g., $10,000 - $50,000">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Company Affinity</label>
+                            <div class="flex items-center space-x-4">
+                                <input type="range" id="grant-affinity" min="0" max="100" value="100" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <span id="affinity-value" class="text-sm font-medium text-gray-700 w-12">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-4 mt-8">
+                        <button type="button" onclick="closeAddGrantModal()" class="px-6 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                            Add Grant
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

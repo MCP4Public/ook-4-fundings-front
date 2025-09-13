@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile - Look 4 Fundings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="border-b border-gray-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">L4F</span>
+                        </div>
+                        <h1 class="text-xl font-semibold text-gray-900">Look 4 Fundings</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <span class="bg-gray-900 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-12">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Company Profile</h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Manage your company information to get better funding recommendations and personalized opportunities.</p>
+            </div>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+            <form id="company-profile-form">
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Name</label>
+                        <input type="text" id="company-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Enter your company name">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Website</label>
+                        <input type="url" id="company-url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="https://yourcompany.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Scope</label>
+                        <textarea id="company-scope" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Describe your company's scope, industry, and focus areas..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end mt-10">
+                    <button type="submit" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                        <i class="fas fa-save mr-2"></i>Save Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Current Profile Display -->
+        <div id="current-profile" class="mt-12 bg-white border border-gray-200 rounded-xl shadow-sm p-8 hidden">
+            <h3 class="text-2xl font-semibold text-gray-900 mb-6">Current Profile</h3>
+            <div id="profile-content" class="space-y-6">
+                <!-- Profile content will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/profile.js"></script>
+</body>
+</html>
