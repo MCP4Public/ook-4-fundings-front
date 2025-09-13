@@ -50,8 +50,13 @@ jobs:
                 <p class="text-xl text-gray-600 mb-8">A modern web application for companies to discover and manage funding opportunities</p>
                 
                 <div class="bg-gray-50 rounded-lg p-8 mb-8">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">🚀 Demo Application</h2>
-                    <p class="text-gray-600 mb-6">This is a FastAPI application that requires a backend server to run.</p>
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">🚀 Full-Stack Application</h2>
+                    <p class="text-gray-600 mb-6">This is a <strong>FastAPI backend + React frontend</strong> application. GitHub Pages only shows static content, so you're seeing a demo page. The full application requires a backend server.</p>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <h3 class="font-semibold text-yellow-800 mb-2">⚠️ Why is this different from local?</h3>
+                        <p class="text-yellow-700 text-sm">GitHub Pages hosts static websites only. Your local version runs a Python server with full functionality. This demo page shows what the app does, but you need a backend server to use it.</p>
+                    </div>
                     
                     <div class="space-y-4">
                         <div class="bg-white rounded-lg p-4 border">
@@ -68,6 +73,16 @@ jobs:
                                 <li>✅ Professional v0-inspired design</li>
                                 <li>✅ Responsive layout</li>
                             </ul>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 border">
+                            <h3 class="font-semibold text-gray-900 mb-2">Deploy Full App</h3>
+                            <p class="text-gray-600 text-sm mb-3">For the complete experience, deploy to:</p>
+                            <div class="space-y-2">
+                                <a href="https://railway.app" class="block text-blue-600 hover:text-blue-800 text-sm">🚂 Railway (Free tier)</a>
+                                <a href="https://render.com" class="block text-blue-600 hover:text-blue-800 text-sm">🎨 Render (Free tier)</a>
+                                <a href="https://vercel.com" class="block text-blue-600 hover:text-blue-800 text-sm">▲ Vercel (Free tier)</a>
+                            </div>
                         </div>
                     </div>
                 </div>
