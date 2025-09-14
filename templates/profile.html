@@ -22,10 +22,10 @@
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200">
+                    <a href="/" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         <i class="fas fa-home mr-2"></i>Home
                     </a>
-                    <span class="bg-gray-900 text-white px-4 py-2 rounded-lg">
+                    <span class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-gray-900">
                         <i class="fas fa-user mr-2"></i>Profile
                     </span>
                 </div>
@@ -43,39 +43,77 @@
             </div>
         </div>
 
-        <!-- Profile Form -->
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
-            <form id="company-profile-form">
-                <div class="space-y-8">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Name</label>
-                        <input type="text" id="company-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Enter your company name">
+        <!-- Company Profile Card -->
+        <div id="company-profile-card" class="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="text-2xl font-semibold text-gray-900">Company Profile</h3>
+                <button id="edit-profile-btn" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition duration-200">
+                    <i class="fas fa-pencil-alt mr-2"></i>Edit
+                </button>
+            </div>
+            
+            <!-- Profile Display -->
+            <div id="profile-display" class="space-y-6">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-building text-gray-500"></i>
                     </div>
-                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Website</label>
-                        <input type="url" id="company-url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="https://yourcompany.com">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Company Scope</label>
-                        <textarea id="company-scope" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Describe your company's scope, industry, and focus areas..."></textarea>
+                        <span class="text-sm font-medium text-gray-500">Company Name</span>
+                        <p id="display-company-name" class="text-lg text-gray-900">No company profile set</p>
                     </div>
                 </div>
                 
-                <div class="flex justify-end mt-10">
-                    <button type="submit" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
-                        <i class="fas fa-save mr-2"></i>Save Profile
-                    </button>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-globe text-gray-500"></i>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-500">Website</span>
+                        <p id="display-company-url" class="text-lg text-gray-900">-</p>
+                    </div>
                 </div>
-            </form>
-        </div>
-
-        <!-- Current Profile Display -->
-        <div id="current-profile" class="mt-12 bg-white border border-gray-200 rounded-xl shadow-sm p-8 hidden">
-            <h3 class="text-2xl font-semibold text-gray-900 mb-6">Current Profile</h3>
-            <div id="profile-content" class="space-y-6">
-                <!-- Profile content will be displayed here -->
+                
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-4 mt-1">
+                        <i class="fas fa-briefcase text-gray-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-sm font-medium text-gray-500">Scope</span>
+                        <p id="display-company-scope" class="text-lg text-gray-900">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Edit Form (Hidden by default) -->
+            <div id="profile-edit-form" class="hidden">
+                <form id="company-profile-form">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                            <input type="text" id="company-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Enter your company name">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Company Website</label>
+                            <input type="url" id="company-url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="https://yourcompany.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Company Scope</label>
+                            <textarea id="company-scope" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition duration-200" placeholder="Describe your company's scope, industry, and focus areas..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4 mt-6">
+                        <button type="button" id="cancel-edit-btn" class="px-6 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">
+                            <i class="fas fa-save mr-2"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -5,10 +5,12 @@ A modern web application for companies to discover, manage, and track funding op
 ## Features
 
 - **Grant Management**: Add, view, and delete funding opportunities
+- **Won Status Tracking**: Mark grants as won or not won with visual indicators
 - **Expandable Cards**: Click to expand grant cards for detailed information
 - **Company Profile**: Manage your company information for better recommendations
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Real-time Updates**: Instant updates when adding or removing grants
+- **Real-time Updates**: Instant updates when adding, removing, or updating grants
+- **Visual Indicators**: Clear badges and icons for grant status and won status
 
 ## Quick Start
 
@@ -45,19 +47,15 @@ python main.py
 
 4. Open your browser and navigate to `http://localhost:8000`
 
-### Production Deployment
-
-The application is automatically deployed to GitHub Pages when you push to the main branch.
-
-**Live Demo:** [https://YOUR_ORG.github.io/look-4-fundings-front](https://YOUR_ORG.github.io/look-4-fundings-front)
-
 ## Usage
 
 ### Landing Page
 - View all your saved funding opportunities
 - Click the "Add New Grant" button to add a new funding opportunity
 - Click on grant cards to expand and see full details
+- Toggle won status by clicking the checkmark icon (✓ for won, ○ for not won)
 - Use the delete button (trash icon) to remove grants
+- Won grants display a green "Won" badge with trophy icon
 
 ### Company Profile
 - Click the "Profile" button in the navigation
@@ -68,9 +66,10 @@ The application is automatically deployed to GitHub Pages when you push to the m
 
 - `GET /` - Landing page
 - `GET /profile` - Company profile page
-- `GET /api/grants` - Get all grants
-- `POST /api/grants` - Create a new grant
+- `GET /api/grants` - Get all grants (includes won status)
+- `POST /api/grants` - Create a new grant (won status defaults to false)
 - `DELETE /api/grants/{grant_id}` - Delete a grant
+- `PATCH /api/grants/{grant_id}/won` - Toggle won status of a grant
 - `GET /api/company` - Get company profile
 - `POST /api/company` - Update company profile
 
@@ -93,6 +92,23 @@ look-4-fundings-front/
 └── README.md           # This file
 ```
 
+## Data Models
+
+### PublicFunding
+- `title` (str): Title of the funding opportunity
+- `url` (str): Direct link to the funding page
+- `summary` (str): Summary/description of the funding
+- `deadline` (date): Application deadline
+- `status` (str): Current status (Open, Closed, Upcoming)
+- `budget` (str): Budget information with currency
+- `company_affinity` (float): Company affinity score (0-100)
+- `won` (bool): Whether the grant was won or not (default: False)
+
+### MyCompany
+- `name` (str): Name of the company
+- `url` (str): Direct link to the company's website
+- `scope` (str): Description of the company's scope and activities
+
 ## Future Enhancements
 
 - Database integration for persistent storage
@@ -101,6 +117,7 @@ look-4-fundings-front/
 - Email notifications for deadlines
 - Integration with funding APIs
 - Analytics and reporting features
+- Grant success rate tracking and analytics
 
 ## Contributing
 

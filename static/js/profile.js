@@ -11,13 +11,28 @@ async function loadCompanyProfile() {
         const company = await response.json();
         
         if (company) {
-            populateForm(company);
-            displayCurrentProfile(company);
+            displayCompanyProfile(company);
+        } else {
+            displayEmptyProfile();
         }
     } catch (error) {
         console.error('Error loading company profile:', error);
-        showNotification('Error loading company profile', 'error');
+        displayEmptyProfile();
     }
+}
+
+// Display company profile in card format
+function displayCompanyProfile(company) {
+    document.getElementById('display-company-name').textContent = company.name;
+    document.getElementById('display-company-url').innerHTML = `<a href="${company.url}" target="_blank" class="text-blue-600 hover:text-blue-800 transition duration-200">${company.url} <i class="fas fa-external-link-alt ml-1 text-sm"></i></a>`;
+    document.getElementById('display-company-scope').textContent = company.scope;
+}
+
+// Display empty profile state
+function displayEmptyProfile() {
+    document.getElementById('display-company-name').textContent = 'No company profile set';
+    document.getElementById('display-company-url').textContent = '-';
+    document.getElementById('display-company-scope').textContent = '-';
 }
 
 // Populate form with existing data
@@ -27,56 +42,18 @@ function populateForm(company) {
     document.getElementById('company-scope').value = company.scope || '';
 }
 
-// Display current profile
-function displayCurrentProfile(company) {
-    const currentProfileDiv = document.getElementById('current-profile');
-    const profileContent = document.getElementById('profile-content');
-    
-    if (company) {
-        profileContent.innerHTML = `
-            <div class="space-y-6">
-                <div class="flex items-start space-x-4">
-                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-building text-gray-500"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-lg font-semibold text-gray-900">Company Name</h4>
-                        <p class="text-gray-600">${company.name}</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-globe text-gray-500"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-lg font-semibold text-gray-900">Website</h4>
-                        <a href="${company.url}" target="_blank" class="text-gray-600 hover:text-gray-900 transition duration-200 inline-flex items-center">
-                            ${company.url}
-                            <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-bullseye text-gray-500"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-lg font-semibold text-gray-900">Company Scope</h4>
-                        <p class="text-gray-600 leading-relaxed">${company.scope}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        currentProfileDiv.classList.remove('hidden');
-    } else {
-        currentProfileDiv.classList.add('hidden');
-    }
-}
-
 // Setup event listeners
 function setupEventListeners() {
+    // Edit button click
+    document.getElementById('edit-profile-btn').addEventListener('click', function() {
+        showEditForm();
+    });
+    
+    // Cancel edit button click
+    document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+        hideEditForm();
+    });
+    
     // Company profile form submission
     document.getElementById('company-profile-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -98,7 +75,8 @@ function setupEventListeners() {
             
             if (response.ok) {
                 const updatedCompany = await response.json();
-                displayCurrentProfile(updatedCompany);
+                displayCompanyProfile(updatedCompany);
+                hideEditForm();
                 showNotification('Company profile updated successfully', 'success');
             } else {
                 throw new Error('Failed to update company profile');
@@ -108,6 +86,39 @@ function setupEventListeners() {
             showNotification('Error updating company profile', 'error');
         }
     });
+}
+
+// Show edit form
+function showEditForm() {
+    // Load current data into form
+    loadCurrentDataIntoForm();
+    
+    // Show edit form, hide display
+    document.getElementById('profile-display').classList.add('hidden');
+    document.getElementById('profile-edit-form').classList.remove('hidden');
+    document.getElementById('edit-profile-btn').classList.add('hidden');
+}
+
+// Hide edit form
+function hideEditForm() {
+    // Show display, hide edit form
+    document.getElementById('profile-display').classList.remove('hidden');
+    document.getElementById('profile-edit-form').classList.add('hidden');
+    document.getElementById('edit-profile-btn').classList.remove('hidden');
+}
+
+// Load current company data into form
+async function loadCurrentDataIntoForm() {
+    try {
+        const response = await fetch('/api/company');
+        const company = await response.json();
+        
+        if (company) {
+            populateForm(company);
+        }
+    } catch (error) {
+        console.error('Error loading current data:', error);
+    }
 }
 
 // Utility function for notifications

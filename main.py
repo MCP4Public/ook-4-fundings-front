@@ -7,6 +7,7 @@ import uvicorn
 from datetime import date
 import json
 import os
+import uuid
 
 from type import PublicFunding, MyCompany
 
@@ -27,7 +28,8 @@ grants_db: List[PublicFunding] = [
         deadline=date(2024, 3, 15),
         status="Open",
         budget="$50,000 - $200,000",
-        company_affinity=85.0
+        company_affinity=85.0,
+        won=False
     ),
     PublicFunding(
         title="Small Business Innovation Research (SBIR) Phase I",
@@ -36,7 +38,8 @@ grants_db: List[PublicFunding] = [
         deadline=date(2024, 4, 30),
         status="Upcoming",
         budget="$150,000",
-        company_affinity=92.0
+        company_affinity=92.0,
+        won=True
     ),
     PublicFunding(
         title="Digital Transformation Accelerator",
@@ -45,7 +48,8 @@ grants_db: List[PublicFunding] = [
         deadline=date(2024, 2, 28),
         status="Closed",
         budget="$25,000 - $100,000",
-        company_affinity=67.0
+        company_affinity=67.0,
+        won=False
     )
 ]
 company_profile: Optional[MyCompany] = None
@@ -71,13 +75,27 @@ async def profile_page(request: Request):
 @app.get("/api/grants", response_model=List[PublicFunding])
 async def get_grants():
     """Get all grants"""
+    # Ensure all grants have the won field
+    for grant in grants_db:
+        if not hasattr(grant, 'won'):
+            grant.won = False
     return grants_db
+
+@app.delete("/api/grants/clear")
+async def clear_all_grants():
+    """Clear all grants (for debugging)"""
+    global grants_db
+    grants_db.clear()
+    return {"message": "All grants cleared"}
 
 @app.post("/api/grants", response_model=PublicFunding)
 async def create_grant(grant: PublicFunding):
     """Create a new grant"""
-    grants_db.append(grant)
-    return grant
+    # Add a unique ID to the grant
+    grant_dict = grant.dict()
+    grant_dict['id'] = str(uuid.uuid4())
+    grants_db.append(PublicFunding(**grant_dict))
+    return PublicFunding(**grant_dict)
 
 @app.delete("/api/grants/{grant_id}")
 async def delete_grant(grant_id: int):
@@ -86,6 +104,16 @@ async def delete_grant(grant_id: int):
         raise HTTPException(status_code=404, detail="Grant not found")
     deleted_grant = grants_db.pop(grant_id)
     return {"message": "Grant deleted successfully", "grant": deleted_grant}
+
+@app.patch("/api/grants/{grant_id}/won")
+async def toggle_grant_won_status(grant_id: int):
+    """Toggle the won status of a grant by index"""
+    if grant_id < 0 or grant_id >= len(grants_db):
+        raise HTTPException(status_code=404, detail="Grant not found")
+    
+    # Toggle the won status
+    grants_db[grant_id].won = not grants_db[grant_id].won
+    return {"message": "Grant won status updated", "grant": grants_db[grant_id]}
 
 @app.get("/api/company", response_model=Optional[MyCompany])
 async def get_company():

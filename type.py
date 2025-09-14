@@ -23,6 +23,7 @@ class PublicFunding(BaseModel):
     status: str = Field(..., description="Status of the funding")
     budget: str = Field(..., description="Budget of the funding")
     company_affinity: float = Field(default=100, description="Affinity of the company with the funding", ge=0, le=100)
+    won: bool = Field(default=False, description="Whether the grant was won or not")
 
 
 class MyCompany(BaseModel):

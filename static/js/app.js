@@ -63,12 +63,15 @@ function createGrantCard(grant, index) {
                     </div>
                 </div>
                 
-                <!-- Affinity Badge -->
-                <div class="mb-4">
+                <!-- Badges -->
+                <div class="mb-4 flex flex-wrap gap-2">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${affinityColor}">
                         <div class="w-2 h-2 rounded-full mr-2 ${getAffinityDotColor(grant.company_affinity)}"></div>
                         ${grant.company_affinity}% Match
                     </span>
+                    <button onclick="toggleWonStatus(${index})" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition duration-200 ${grant.won ? 'bg-green-100 text-green-800 border border-green-200 hover:bg-green-200' : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'}">
+                        <i class="fas fa-trophy mr-1"></i>Won
+                    </button>
                 </div>
                 
                 <!-- Summary (always visible) -->
@@ -155,6 +158,47 @@ async function deleteGrant(index) {
     }
 }
 
+// Toggle won status of a grant
+async function toggleWonStatus(index) {
+    try {
+        // Ensure the index is valid
+        if (index < 0 || index >= grants.length) {
+            throw new Error('Invalid grant index');
+        }
+        
+        // Get the current grant from the frontend array
+        const currentGrant = grants[index];
+        
+        // Find the corresponding grant in the backend by matching title and URL
+        const response = await fetch('/api/grants');
+        const backendGrants = await response.json();
+        const backendIndex = backendGrants.findIndex(grant => 
+            grant.title === currentGrant.title && grant.url === currentGrant.url
+        );
+        
+        if (backendIndex === -1) {
+            throw new Error('Grant not found in backend');
+        }
+        
+        // Toggle the won status using the backend index
+        const toggleResponse = await fetch(`/api/grants/${backendIndex}/won`, {
+            method: 'PATCH'
+        });
+        
+        if (toggleResponse.ok) {
+            const updatedGrant = await toggleResponse.json();
+            // Update the grant in the frontend array
+            grants[index] = updatedGrant.grant;
+            renderGrants();
+        } else {
+            throw new Error('Failed to update won status');
+        }
+    } catch (error) {
+        console.error('Error toggling won status:', error);
+        showNotification('Error updating won status', 'error');
+    }
+}
+
 // Modal functions
 function openAddGrantModal() {
     document.getElementById('add-grant-modal').classList.remove('hidden');
@@ -181,7 +225,8 @@ function setupEventListeners() {
             deadline: document.getElementById('grant-deadline').value,
             status: document.getElementById('grant-status').value,
             budget: document.getElementById('grant-budget').value,
-            company_affinity: parseFloat(document.getElementById('grant-affinity').value)
+            company_affinity: parseFloat(document.getElementById('grant-affinity').value),
+            won: false
         };
         
         try {
