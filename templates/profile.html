@@ -46,13 +46,19 @@
             </div>
         </div>
 
+
         <!-- Company Profile Card -->
         <div id="company-profile-card" class="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
             <div class="flex justify-between items-start mb-6">
                 <h3 class="text-2xl font-semibold text-gray-900">Company Profile</h3>
-                <button id="edit-profile-btn" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition duration-200">
-                    <i class="fas fa-pencil-alt mr-2"></i>Edit
-                </button>
+                <div class="flex space-x-3">
+                    <button id="upload-pdf-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition duration-200">
+                        <i class="fas fa-upload mr-2"></i>Upload PDF
+                    </button>
+                    <button id="edit-profile-btn" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition duration-200">
+                        <i class="fas fa-pencil-alt mr-2"></i>Edit
+                    </button>
+                </div>
             </div>
             
             <!-- Profile Display -->
@@ -117,6 +123,68 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Upload Modal -->
+    <div id="pdf-upload-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                <div class="px-8 py-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-gray-900">Upload Company PDF</h3>
+                        <button onclick="closePdfUploadModal()" class="text-gray-400 hover:text-gray-600 transition duration-200">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-8">
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600 mb-6">Upload a PDF document about your company and we'll automatically extract the key information using AI.</p>
+                        
+                        <form id="pdf-upload-form" enctype="multipart/form-data">
+                            <div class="relative">
+                                <input type="file" id="pdf-file" accept=".pdf" class="hidden" required>
+                                <label for="pdf-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition duration-200">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <i class="fas fa-file-pdf text-4xl text-gray-400 mb-2"></i>
+                                        <p class="mb-2 text-sm text-gray-500">
+                                            <span class="font-semibold">Click to upload</span> or drag and drop
+                                        </p>
+                                        <p class="text-xs text-gray-500">PDF files only</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <button type="submit" id="upload-pdf-submit-btn" class="mt-4 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-upload mr-2"></i>Analyze PDF
+                            </button>
+                        </form>
+                        
+                        <!-- Upload Progress -->
+                        <div id="upload-progress" class="hidden mt-4">
+                            <div class="flex items-center justify-center space-x-2">
+                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                                <span class="text-sm text-gray-600">Analyzing PDF with AI...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Powered by Mistral -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <div class="flex items-center justify-center space-x-3 text-gray-500">
+                            <span class="text-sm">Powered by</span>
+                            <div class="flex items-center space-x-2">
+                                <!-- Mistral Logo -->
+                                <div class="mistral-logo">
+                                    <img src="/static/images/mistral-logo.png" alt="Mistral AI" width="32" height="32" class="h-8 w-8">
+                                </div>
+                                <span class="font-semibold text-gray-700">Mistral AI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, FileResponse
@@ -7,27 +7,47 @@ import uvicorn
 from datetime import date, datetime
 import os
 import uuid
+import fitz  # PyMuPDF
+import requests
+import json
+from dotenv import load_dotenv
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from contextlib import asynccontextmanager
 
 from type import PublicFunding, MyCompany
+
+# Load environment variables
+load_dotenv()
+
+# Configuration
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
+
+# Lifespan event handler
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize application on startup"""
+    try:
+        # Ensure reports directory exists
+        os.makedirs("static/reports", exist_ok=True)
+        print("Application started successfully")
+        print(f"Mistral API key configured: {'Yes' if MISTRAL_API_KEY else 'No'}")
+    except Exception as e:
+        print(f"Error during startup: {e}")
+        raise
+    yield
+    # Cleanup code can go here if needed
 
 app = FastAPI(
     title="Look 4 Fundings",
     description="A web application for companies to review and manage funding grants",
+    lifespan=lifespan
 )
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Startup event
-@app.on_event("startup")
-async def startup_event():
-    """Initialize application on startup"""
-    # Ensure reports directory exists
-    os.makedirs("static/reports", exist_ok=True)
-    print("Application started successfully")
 
 # Templates
 templates = Jinja2Templates(directory="templates")
@@ -81,6 +101,12 @@ async def landing_page(request: Request):
     )
 
 
+@app.get("/api/status")
+async def api_status():
+    """Simple API status endpoint"""
+    return {"status": "ok", "message": "API is running"}
+
+
 @app.get("/profile", response_class=HTMLResponse)
 async def profile_page(request: Request):
     """Company profile page"""
@@ -101,7 +127,19 @@ async def reports_page(request: Request):
 @app.get("/health")
 async def health_check():
     """Health check endpoint for deployment platforms"""
-    return {"status": "healthy", "message": "Look 4 Fundings API is running"}
+    try:
+        return {
+            "status": "healthy", 
+            "message": "Look 4 Fundings API is running",
+            "mistral_configured": bool(MISTRAL_API_KEY),
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
 
 # API endpoints
 @app.get("/api/grants", response_model=List[PublicFunding])
@@ -164,6 +202,29 @@ async def update_company(company: MyCompany):
     global company_profile
     company_profile = company
     return company
+
+
+@app.post("/api/company/upload-pdf", response_model=MyCompany)
+async def upload_company_pdf(pdf_file: UploadFile = File(...)):
+    """Upload and analyze company PDF to extract information"""
+    # Validate file type
+    if not pdf_file.filename.lower().endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    
+    # Extract text from PDF
+    text_content = extract_text_from_pdf(pdf_file)
+    
+    if not text_content.strip():
+        raise HTTPException(status_code=400, detail="No text content found in PDF")
+    
+    # Analyze with Mistral
+    company_info = analyze_company_with_mistral(text_content)
+    
+    # Update global company profile
+    global company_profile
+    company_profile = company_info
+    
+    return company_info
 
 
 # Reports API endpoints
@@ -335,8 +396,109 @@ def create_pdf_report(filepath: str, content: dict, report_type: str):
     doc.build(story)
 
 
+def extract_text_from_pdf(pdf_file: UploadFile) -> str:
+    """Extract text from PDF using PyMuPDF"""
+    try:
+        # Read PDF content
+        pdf_content = pdf_file.file.read()
+        
+        # Open PDF with PyMuPDF
+        pdf_document = fitz.open(stream=pdf_content, filetype="pdf")
+        text_content = ""
+        
+        # Extract text from all pages
+        for page_num in range(pdf_document.page_count):
+            page = pdf_document[page_num]
+            text_content += page.get_text()
+        
+        pdf_document.close()
+        return text_content
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error extracting text from PDF: {str(e)}")
+
+
+def analyze_company_with_mistral(text_content: str) -> MyCompany:
+    """Analyze company information using Mistral AI"""
+    if not MISTRAL_API_KEY:
+        raise HTTPException(status_code=500, detail="Mistral API key not configured")
+    
+    # Create the prompt with the company structure
+    company_schema = {
+        "name": "string - Company name",
+        "url": "string - Company website URL", 
+        "scope": "string - Company scope/description"
+    }
+    
+    prompt = f"""
+    Analyze the following company document and extract the company information in the exact JSON format specified below.
+    
+    Company Information Schema:
+    {json.dumps(company_schema, indent=2)}
+    
+    Document Content:
+    {text_content}
+    
+    Please extract the company information and return ONLY a valid JSON object matching the schema above.
+    If any information is not available in the document, use "Not specified" as the value.
+    """
+    
+    try:
+        headers = {
+            "Authorization": f"Bearer {MISTRAL_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": "mistral-large-latest",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "temperature": 0.1,
+            "max_tokens": 1000
+        }
+        
+        response = requests.post(MISTRAL_API_URL, headers=headers, json=payload)
+        response.raise_for_status()
+        
+        result = response.json()
+        extracted_text = result["choices"][0]["message"]["content"]
+        
+        # Parse the JSON response
+        try:
+            company_data = json.loads(extracted_text)
+            return MyCompany(**company_data)
+        except json.JSONDecodeError:
+            # If JSON parsing fails, try to extract JSON from the response
+            import re
+            json_match = re.search(r'\{.*\}', extracted_text, re.DOTALL)
+            if json_match:
+                company_data = json.loads(json_match.group())
+                return MyCompany(**company_data)
+            else:
+                raise HTTPException(status_code=500, detail="Failed to parse company information from AI response")
+                
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Error calling Mistral API: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error analyzing company information: {str(e)}")
+
+
 if __name__ == "__main__":
     import os
+    import sys
 
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    try:
+        print("🚀 Starting Look 4 Fundings application...")
+        print(f"Python version: {sys.version}")
+        print(f"Working directory: {os.getcwd()}")
+        
+        port = int(os.environ.get("PORT", 8000))
+        print(f"Starting server on port {port}")
+        
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    except Exception as e:
+        print(f"❌ Failed to start application: {e}")
+        sys.exit(1)

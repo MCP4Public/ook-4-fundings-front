@@ -54,6 +54,34 @@ function setupEventListeners() {
         hideEditForm();
     });
     
+    // PDF upload button click
+    document.getElementById('upload-pdf-btn').addEventListener('click', function() {
+        openPdfUploadModal();
+    });
+    
+    // PDF upload form submission
+    document.getElementById('pdf-upload-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await handlePdfUpload();
+    });
+    
+    // File input change
+    document.getElementById('pdf-file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Update the label to show selected file
+            const label = document.querySelector('label[for="pdf-file"]');
+            const fileName = file.name;
+            label.innerHTML = `
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <i class="fas fa-file-pdf text-4xl text-blue-500 mb-2"></i>
+                    <p class="mb-2 text-sm text-gray-700 font-semibold">${fileName}</p>
+                    <p class="text-xs text-gray-500">Click to change file</p>
+                </div>
+            `;
+        }
+    });
+    
     // Company profile form submission
     document.getElementById('company-profile-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -119,6 +147,98 @@ async function loadCurrentDataIntoForm() {
     } catch (error) {
         console.error('Error loading current data:', error);
     }
+}
+
+// Open PDF upload modal
+function openPdfUploadModal() {
+    document.getElementById('pdf-upload-modal').classList.remove('hidden');
+    // Reset form
+    document.getElementById('pdf-file').value = '';
+    resetFileInputLabel();
+}
+
+// Close PDF upload modal
+function closePdfUploadModal() {
+    document.getElementById('pdf-upload-modal').classList.add('hidden');
+    // Reset form
+    document.getElementById('pdf-file').value = '';
+    resetFileInputLabel();
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('pdf-upload-modal');
+    if (event.target === modal) {
+        closePdfUploadModal();
+    }
+});
+
+// Handle PDF upload and analysis
+async function handlePdfUpload() {
+    const fileInput = document.getElementById('pdf-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showNotification('Please select a PDF file', 'error');
+        return;
+    }
+    
+    if (file.type !== 'application/pdf') {
+        showNotification('Please select a valid PDF file', 'error');
+        return;
+    }
+    
+    // Show progress indicator
+    const uploadBtn = document.getElementById('upload-pdf-submit-btn');
+    const uploadProgress = document.getElementById('upload-progress');
+    
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+    uploadProgress.classList.remove('hidden');
+    
+    try {
+        const formData = new FormData();
+        formData.append('pdf_file', file);
+        
+        const response = await fetch('/api/company/upload-pdf', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const companyData = await response.json();
+            displayCompanyProfile(companyData);
+            showNotification('PDF analyzed successfully! Company information extracted.', 'success');
+            
+            // Close modal and reset form
+            closePdfUploadModal();
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to analyze PDF');
+        }
+    } catch (error) {
+        console.error('Error uploading PDF:', error);
+        showNotification(`Error analyzing PDF: ${error.message}`, 'error');
+    } finally {
+        // Reset UI
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Analyze PDF';
+        uploadProgress.classList.add('hidden');
+    }
+}
+
+// Reset file input label
+function resetFileInputLabel() {
+    const label = document.querySelector('label[for="pdf-file"]');
+    label.innerHTML = `
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <i class="fas fa-file-pdf text-4xl text-gray-400 mb-2"></i>
+            <p class="mb-2 text-sm text-gray-500">
+                <span class="font-semibold">Click to upload</span> or drag and drop
+            </p>
+            <p class="text-xs text-gray-500">PDF files only</p>
+        </div>
+    `;
 }
 
 // Utility function for notifications
