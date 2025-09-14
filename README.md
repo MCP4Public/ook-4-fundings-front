@@ -8,6 +8,10 @@ A modern web application for companies to discover, manage, and track funding op
 - **Won Status Tracking**: Mark grants as won or not won with visual indicators
 - **Expandable Cards**: Click to expand grant cards for detailed information
 - **Company Profile**: Manage your company information for better recommendations
+- **Professional Reports**: Generate PDF reports from company data and won grants
+- **Report Types**: 
+  - Generated reports (from website data)
+  - API reports (from custom LLM content)
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Updates**: Instant updates when adding, removing, or updating grants
 - **Visual Indicators**: Clear badges and icons for grant status and won status
@@ -61,71 +65,37 @@ python main.py
 - Click the "Profile" button in the navigation
 - Fill in your company information (name, website, scope)
 - Save your profile to get better funding recommendations
+- Edit your profile anytime by clicking the pencil icon
+
+### Reports
+- Click the "Reports" button in the navigation
+- Generate professional PDF reports for funding applications
+- **Generated Reports**: Automatically created from your company data and won grants
+- **API Reports**: Create custom reports from LLM-generated content
+- Download reports directly from the table
+- Delete reports you no longer need
 
 ## API Endpoints
 
+### Pages
 - `GET /` - Landing page
 - `GET /profile` - Company profile page
+- `GET /reports` - Reports page
+
+### Grants API
 - `GET /api/grants` - Get all grants (includes won status)
 - `POST /api/grants` - Create a new grant (won status defaults to false)
 - `DELETE /api/grants/{grant_id}` - Delete a grant
 - `PATCH /api/grants/{grant_id}/won` - Toggle won status of a grant
+
+### Company API
 - `GET /api/company` - Get company profile
 - `POST /api/company` - Update company profile
 
-## Project Structure
+### Reports API
+- `GET /api/reports` - Get all generated reports
+- `POST /api/reports/generate` - Generate a new report
+  - Body: `{"type": "generated|api", "content": "optional content"}`
+- `GET /api/reports/{report_id}/download` - Download a report PDF
+- `DELETE /api/reports/{report_id}` - Delete a report
 
-```
-look-4-fundings-front/
-├── main.py              # FastAPI application
-├── type.py              # Pydantic models
-├── templates/           # HTML templates
-│   ├── index.html       # Landing page
-│   └── profile.html     # Company profile page
-├── static/              # Static assets
-│   ├── css/
-│   │   └── style.css    # Custom styles
-│   └── js/
-│       ├── app.js       # Main application logic
-│       └── profile.js   # Profile page logic
-├── pyproject.toml       # Project configuration
-└── README.md           # This file
-```
-
-## Data Models
-
-### PublicFunding
-- `title` (str): Title of the funding opportunity
-- `url` (str): Direct link to the funding page
-- `summary` (str): Summary/description of the funding
-- `deadline` (date): Application deadline
-- `status` (str): Current status (Open, Closed, Upcoming)
-- `budget` (str): Budget information with currency
-- `company_affinity` (float): Company affinity score (0-100)
-- `won` (bool): Whether the grant was won or not (default: False)
-
-### MyCompany
-- `name` (str): Name of the company
-- `url` (str): Direct link to the company's website
-- `scope` (str): Description of the company's scope and activities
-
-## Future Enhancements
-
-- Database integration for persistent storage
-- User authentication and multiple companies
-- Advanced filtering and search capabilities
-- Email notifications for deadlines
-- Integration with funding APIs
-- Analytics and reporting features
-- Grant success rate tracking and analytics
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.

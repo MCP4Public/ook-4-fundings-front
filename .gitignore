@@ -63,3 +63,7 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Generated reports (PDFs)
+static/reports/
+*.pdf
