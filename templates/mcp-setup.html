@@ -28,95 +28,239 @@
                     <a href="/profile" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         <i class="fas fa-user mr-2"></i>Profile
                     </a>
-                    <span class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-gray-900">
-                        <i class="fas fa-cogs mr-2"></i>MCP Setup
-                    </span>
                     <a href="/reports" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         <i class="fas fa-file-pdf mr-2"></i>Reports
                     </a>
+                    <span class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-gray-900">
+                        <i class="fas fa-plug mr-2"></i>MCP Setup
+                    </span>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <!-- Header Section -->
+    <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
         <div class="mb-12">
             <div class="text-center">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">MCP Functions</h1>
-                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Explore the available MCP (Model Context Protocol) functions for integrating with the Look 4 Fundings platform.</p>
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <h1 class="text-4xl font-bold text-gray-900">MCP Setup for</h1>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-4xl font-bold text-gray-900">Le Chat</span>
+                        <img src="/static/images/mistral-logo.png" alt="Mistral AI" width="32" height="32" class="h-8 w-8">
+                    </div>
+                </div>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Connect Look 4 Fundings to Le Chat using our MCP (Model Context Protocol) connector for AI-powered grant discovery.</p>
             </div>
         </div>
 
-        <!-- MCP Functions Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Function 1 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-search text-blue-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Search Funding</h3>
+        <!-- MCP Connection Card -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8 mb-8">
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-plug text-2xl text-blue-600"></i>
                 </div>
-                <p class="text-gray-600 text-sm">Search for EU funding opportunities by keyword and return a list of funding details.</p>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-900">MCP Connector Information</h3>
+                    <p class="text-gray-600">Use this information to set up the connection in Le Chat</p>
+                </div>
             </div>
-
-            <!-- Function 2 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-user-circle text-green-600"></i>
+            
+            <div class="space-y-6">
+                <!-- Connection URL -->
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-3">Connection URL</h4>
+                    <div class="flex items-center space-x-3">
+                        <code class="flex-1 bg-white border border-gray-300 rounded-md px-4 py-3 text-sm font-mono text-gray-800">
+                            https://mcp-look-4-fundings-5135f019.alpic.live/
+                        </code>
+                        <button onclick="copyToClipboard('https://mcp-look-4-fundings-5135f019.alpic.live/')" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
+                            <i class="fas fa-copy mr-2"></i>Copy
+                        </button>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Get Company Profile</h3>
                 </div>
-                <p class="text-gray-600 text-sm">Retrieve the company profile information from the Look 4 Fundings web application to provide context for better funding recommendations.</p>
+
+                <!-- Setup Instructions -->
+                <div class="bg-blue-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-blue-900 mb-4">Setup Instructions</h4>
+                    <ol class="space-y-3 text-blue-800">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">1</span>
+                            <span>Open <strong>Le Chat</strong> in your browser</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">2</span>
+                            <span>Navigate to <strong>Intelligence → Connectors</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">3</span>
+                            <span>Click <strong>"Add Connector"</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">4</span>
+                            <span>Select <strong>"Custom MCP Connector"</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">5</span>
+                            <span>Choose a name (e.g., "Look 4 Fundings") and paste the connection URL above</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">6</span>
+                            <span>Click <strong>"Connect"</strong> to establish the connection</span>
+                        </li>
+                    </ol>
+                </div>
             </div>
+        </div>
 
-            <!-- Function 3 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-list text-purple-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Get All Grants</h3>
+        <!-- Example Usage -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8 mb-8">
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-comments text-2xl text-green-600"></i>
                 </div>
-                <p class="text-gray-600 text-sm">Retrieve all grants currently listed in the Look 4 Fundings web application, including details like title, URL, summary, deadline, status, budget, and company affinity.</p>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-900">Example Usage</h3>
+                    <p class="text-gray-600">Here's how to interact with the MCP connector in Le Chat</p>
+                </div>
             </div>
-
-            <!-- Function 4 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-edit text-yellow-600"></i>
+            
+            <div class="space-y-6">
+                <!-- User Prompt Example -->
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-3">User Prompt</h4>
+                    <div class="bg-white border border-gray-300 rounded-md p-4">
+                        <p class="text-gray-800 font-medium">"Hey can you look for grants?"</p>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Update Company Scope</h3>
                 </div>
-                <p class="text-gray-600 text-sm">Update only the company scope in the Look 4 Fundings web application by fetching the current profile, updating the scope field, and saving the changes.</p>
+
+                <!-- AI Response Example -->
+                <div class="bg-green-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-green-900 mb-3">AI Response</h4>
+                    <div class="bg-white border border-green-300 rounded-md p-4">
+                        <p class="text-green-800">
+                            "Yes I found for you 10 solutions perfect for your startup! The best one is <strong>Test Grant</strong>! 
+                            Do you want me to add it among the ones you already have?"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Additional Examples -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h5 class="font-semibold text-blue-900 mb-2">More Examples:</h5>
+                        <ul class="text-sm text-blue-800 space-y-1">
+                            <li>• "Find grants for clean technology"</li>
+                            <li>• "Show me funding for AI startups"</li>
+                            <li>• "What grants are available this month?"</li>
+                            <li>• "Add this grant to my list"</li>
+                        </ul>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h5 class="font-semibold text-purple-900 mb-2">Capabilities:</h5>
+                        <ul class="text-sm text-purple-800 space-y-1">
+                            <li>• Search and discover grants</li>
+                            <li>• Filter by industry/type</li>
+                            <li>• Check deadlines and budgets</li>
+                            <li>• Manage your grant list</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <!-- Function 5 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-file-pdf text-red-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Generate PDF Report</h3>
-                </div>
-                <p class="text-gray-600 text-sm">Generate a professional PDF report for the company. Creates reports from company profile and won grants data, or custom reports from provided text.</p>
+        <!-- MCP Functions Available -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-2">MCP Functions Available</h3>
+                <p class="text-gray-600">Discover what you can do with our MCP connector</p>
             </div>
-
-            <!-- Function 6 -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-plus-circle text-indigo-600"></i>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-search text-blue-600"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-blue-900">Grant Discovery</h4>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Add New Grant</h3>
+                    <ul class="text-sm text-blue-800 space-y-2">
+                        <li>• Search grants by industry</li>
+                        <li>• Filter by funding amount</li>
+                        <li>• Find grants by deadline</li>
+                        <li>• Discover new opportunities</li>
+                    </ul>
                 </div>
-                <p class="text-gray-600 text-sm">Add a new grant to the Look 4 Fundings web application with a specified affinity score by updating the PublicFunding object and creating a new entry.</p>
+
+                <div class="bg-green-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-list text-green-600"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-green-900">Grant Management</h4>
+                    </div>
+                    <ul class="text-sm text-green-800 space-y-2">
+                        <li>• Add grants to your list</li>
+                        <li>• Track application status</li>
+                        <li>• Set deadline reminders</li>
+                        <li>• Organize by priority</li>
+                    </ul>
+                </div>
+
+                <div class="bg-purple-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-chart-line text-purple-600"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-purple-900">Analytics & Insights</h4>
+                    </div>
+                    <ul class="text-sm text-purple-800 space-y-2">
+                        <li>• Success rate analysis</li>
+                        <li>• Funding trend insights</li>
+                        <li>• Application recommendations</li>
+                        <li>• Performance tracking</li>
+                    </ul>
+                </div>
+
+                <div class="bg-orange-50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-robot text-orange-600"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-orange-900">AI Assistance</h4>
+                    </div>
+                    <ul class="text-sm text-orange-800 space-y-2">
+                        <li>• Smart grant matching</li>
+                        <li>• Application guidance</li>
+                        <li>• Deadline optimization</li>
+                        <li>• Personalized recommendations</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show success feedback
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+    </script>
 </body>
 </html>
