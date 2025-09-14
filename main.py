@@ -123,6 +123,14 @@ async def reports_page(request: Request):
     )
 
 
+@app.get("/mcp-setup", response_class=HTMLResponse)
+async def mcp_setup_page(request: Request):
+    """MCP Setup page"""
+    return templates.TemplateResponse(
+        "mcp-setup.html", {"request": request}
+    )
+
+
 # Health check endpoint
 @app.get("/health")
 async def health_check():
