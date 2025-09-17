@@ -125,18 +125,6 @@ python main.py
 ### Optional
 - `PORT`: Application port (defaults to 8000)
 
-## Deployment
-
-### Railway Deployment
-1. Connect your GitHub repository to Railway
-2. Set environment variables in Railway dashboard:
-   - `MISTRAL_API_KEY`: Your Mistral AI API key
-3. Railway will automatically build and deploy your application
-
-### Other Platforms
-- Ensure `MISTRAL_API_KEY` environment variable is set
-- The application will start on the port specified by `PORT` environment variable
-
 ## Dependencies
 
 - **FastAPI**: Web framework
